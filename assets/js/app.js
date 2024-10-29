@@ -128,8 +128,6 @@ if (userName) {
 }
 
 
-
-
 window.addEventListener('DOMContentLoaded', () => {
   const editableElements = document.querySelectorAll('[contenteditable="true"]');
 
@@ -149,13 +147,50 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 
-const skillLevels = document.querySelectorAll('.skill-level');
 
-skillLevels.forEach(level => {
-  const input = level.querySelector('input');
-  const progressBar = level.querySelector('div');
 
-  input.addEventListener('input', () => {
-    progressBar.style.width = input.value + '%';
+// Function to display the input box for skill level on click
+function showInputBox(inputId, skillBarId) {
+  const inputBox = document.getElementById(inputId);
+  inputBox.style.display = 'inline'; // Show the input box
+  inputBox.focus(); // Focus to enable immediate typing
+
+  // Hide progress bar div
+  const skillBar = document.getElementById(skillBarId).querySelector('.progress-bar');
+  skillBar.style.display = 'none';
+}
+
+// Function to save the skill level and update the bar's width on blur
+function updateSkillLevel(inputId, skillBarId) {
+  const inputBox = document.getElementById(inputId);
+  const newLevel = inputBox.value;
+
+  if (newLevel >= 0 && newLevel <= 100) {
+      localStorage.setItem(inputId, newLevel); // Save to localStorage
+
+      const skillBar = document.getElementById(skillBarId).querySelector('.progress-bar');
+      skillBar.style.width = `${newLevel}%`; // Update bar width
+      skillBar.style.display = 'block'; // Show updated bar
+      inputBox.style.display = 'none'; // Hide input box
+  } else {
+      alert("Please enter a number between 0 and 100.");
+  }
+}
+
+// On page load, restore skill levels from localStorage
+window.addEventListener('DOMContentLoaded', () => {
+  const skills = [
+      { inputId: 'skill-level-1', skillBarId: 'skilllvl1' },
+      { inputId: 'skill-level-2', skillBarId: 'skilllvl2' },
+      { inputId: 'skill-level-3', skillBarId: 'skilllvl3' },
+      // Add other skills as needed
+  ];
+
+  skills.forEach(skill => {
+      const savedLevel = localStorage.getItem(skill.inputId);
+      if (savedLevel) {
+          const skillBar = document.getElementById(skill.skillBarId).querySelector('.progress-bar');
+          skillBar.style.width = `${savedLevel}%`;
+      }
   });
 });
