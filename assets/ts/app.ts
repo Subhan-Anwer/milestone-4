@@ -128,3 +128,23 @@ if (userName) {
 } else {
     // do nothing!
 }
+
+
+
+window.addEventListener('DOMContentLoaded', () => {
+    const editableElements: NodeListOf<HTMLElement> = document.querySelectorAll('[contenteditable="true"]');
+  
+    editableElements.forEach((element: HTMLElement) => {
+      const id: string = element.id;
+      const savedValue: string | null = localStorage.getItem(id);
+  
+      if (savedValue) {
+        element.textContent = savedValue;
+      }
+  
+      element.addEventListener('blur', () => {
+        const newText: string = element.textContent || ''; // Handle potential undefined content
+        localStorage.setItem(id, newText);
+      });
+    });
+});
